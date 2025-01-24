@@ -10,16 +10,12 @@ import lombok.NoArgsConstructor;
 @Data
 public class InventoryPojo {
 	
-private int inventoryId;
-	
+	private int inventoryId;
 	private int productQuantity;
-	
-	
 	private int inStoreId;
-	
-	
 	private int inProductId;
 	
 	private StorePojo storePojo;
+	private ProductPojo productPojo;
 
 }
