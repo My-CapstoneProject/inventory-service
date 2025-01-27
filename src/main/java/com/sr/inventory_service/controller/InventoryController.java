@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sr.inventory_service.entity.Inventory;
 import com.sr.inventory_service.pojo.InventoryPojo;
+import com.sr.inventory_service.pojo.ProductPojo;
 import com.sr.inventory_service.pojo.StorePojo;
 import com.sr.inventory_service.service.InventoryService;
+import com.sr.inventory_service.service.ProductClient;
 import com.sr.inventory_service.service.StoreClient;
 
 @RestController
@@ -30,6 +32,9 @@ public class InventoryController {
 	
 	@Autowired
 	StoreClient storeClient;
+	
+	@Autowired
+	ProductClient productClient;
 	
 	@GetMapping("/inventorys")
 	public ResponseEntity<List<Inventory>> getAllInventorys(){
@@ -65,6 +70,7 @@ public class InventoryController {
 	        
 	        // Now use Feign client to fetch department by departmentId
 	        StorePojo store = storeClient.getStoreById(inventory.getInStoreId());
+	        ProductPojo product = productClient.getProductById(inventory.getInProductId());
 	        
 	        
 	        // Set the department to the employee
@@ -73,6 +79,7 @@ public class InventoryController {
 	        inPojo.setInStoreId(inventory.getInStoreId());
 	        inPojo.setInProductId(inventory.getInProductId());
 	        inPojo.setStorePojo(store);
+	        inPojo.setProductPojo(product);
 	        
 	        return new ResponseEntity<>(inPojo, HttpStatus.OK);
 	    } else {

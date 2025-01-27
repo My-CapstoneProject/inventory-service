@@ -10,7 +10,7 @@ import com.sr.inventory_service.pojo.StorePojo;
 public interface StoreClient {
 
     // Endpoint to fetch department details by department ID
-    @GetMapping("/stores/{storeId}")
-    StorePojo getStoreById(@PathVariable int storeId);
+    @GetMapping("/stores/b/{sid}")
+    StorePojo getStoreById(@PathVariable int sid);
 }
 
