@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sr.inventory_service.dao.InventoryRepo;
 import com.sr.inventory_service.entity.Inventory;
 import com.sr.inventory_service.pojo.InventoryPojo;
+import com.sr.inventory_service.pojo.OrderProductPojo;
 import com.sr.inventory_service.pojo.ProductPojo;
 import com.sr.inventory_service.pojo.StorePojo;
 import com.sr.inventory_service.service.InventoryService;
@@ -29,6 +31,9 @@ public class InventoryController {
 	
 	@Autowired
 	InventoryService inventoryService;
+	
+	@Autowired
+    InventoryRepo inventoryRepository;
 	
 	@Autowired
 	StoreClient storeClient;
@@ -87,5 +92,31 @@ public class InventoryController {
 	    }
 	}
 
+	@PostMapping("/update-sales")
+    public ResponseEntity<String> updateSales(@RequestBody List<OrderProductPojo> orderProducts) {
+        try {
+            for (OrderProductPojo orderProduct : orderProducts) {
+                // Find inventory record by product ID
+                Inventory inventory = inventoryRepository.findByInProductId(orderProduct.getProductId())
+                        .orElseThrow(() -> new RuntimeException(
+                                "Product with ID " + orderProduct.getProductId() + " not found in inventory"));
 
+                // Deduct the sales quantity from the current product quantity
+                int updatedQuantity = inventory.getProductQuantity() - orderProduct.getSalesQuantity();
+                if (updatedQuantity < 0) {
+                    return ResponseEntity.badRequest().body("Not enough stock for product ID: " + orderProduct.getProductId());
+                }
+
+                inventory.setProductQuantity(updatedQuantity);
+
+                // Save updated inventory
+                inventoryRepository.save(inventory);
+            }
+
+            return ResponseEntity.ok("Inventory updated successfully.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to update inventory.");
+        }
+    }
 }
