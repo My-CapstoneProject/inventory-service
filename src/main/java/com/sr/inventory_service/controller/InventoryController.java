@@ -92,7 +92,7 @@ public class InventoryController {
 	    }
 	}
 
-	@PostMapping("/update-sales")
+	@PostMapping("inventorys/update-sales")
     public ResponseEntity<String> updateSales(@RequestBody List<OrderProductPojo> orderProducts) {
         try {
             for (OrderProductPojo orderProduct : orderProducts) {
