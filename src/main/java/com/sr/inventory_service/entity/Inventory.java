@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class Inventory {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="inventory_id")
 	private int inventoryId;
 	
